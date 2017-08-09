@@ -1,0 +1,177 @@
+/* =============
+   Timeline
+============= */
+.timeline {
+  border-collapse: collapse;
+  border-spacing: 0;
+  display: table;
+  margin-bottom: 50px;
+  position: relative;
+  table-layout: fixed;
+  width: 100%;
+}
+.timeline .time-show {
+  margin-bottom: 30px;
+  margin-right: -75px;
+  margin-top: 30px;
+  position: relative;
+}
+.timeline .time-show a {
+  color: #ffffff;
+}
+.timeline:before {
+  background-color: rgba(152, 166, 173, 0.3);
+  bottom: 0px;
+  content: "";
+  left: 50%;
+  position: absolute;
+  top: 30px;
+  width: 1px;
+  z-index: 0;
+}
+.timeline .timeline-icon {
+  -webkit-border-radius: 50%;
+  background: #98a6ad;
+  border-radius: 50%;
+  color: #ffffff;
+  display: block;
+  height: 20px;
+  left: -54px;
+  margin-top: -10px;
+  position: absolute;
+  text-align: center;
+  top: 50%;
+  width: 20px;
+}
+.timeline .timeline-icon i {
+  color: #ebeff2;
+}
+.timeline .time-icon:before {
+  font-size: 16px;
+  margin-top: 5px;
+}
+h3.timeline-title {
+  color: #98a6ad;
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0 0 5px;
+  text-transform: uppercase;
+}
+.timeline-item {
+  display: table-row;
+}
+.timeline-item:before {
+  content: "";
+  display: block;
+  width: 50%;
+}
+.timeline-item .timeline-desk .arrow {
+  border-bottom: 8px solid transparent;
+  border-right: 8px solid #ffffff !important;
+  border-top: 8px solid transparent;
+  display: block;
+  height: 0;
+  left: -7px;
+  margin-top: -10px;
+  position: absolute;
+  top: 50%;
+  width: 0;
+}
+.timeline-item.alt:after {
+  content: "";
+  display: block;
+  width: 50%;
+}
+.timeline-item.alt .timeline-desk .arrow-alt {
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid #ffffff !important;
+  border-top: 8px solid transparent;
+  display: block;
+  height: 0;
+  left: auto;
+  margin-top: -10px;
+  position: absolute;
+  right: -7px;
+  top: 50%;
+  width: 0;
+}
+.timeline-item.alt .timeline-desk .album {
+  float: right;
+  margin-top: 20px;
+}
+.timeline-item.alt .timeline-desk .album a {
+  float: right;
+  margin-left: 5px;
+}
+.timeline-item.alt .timeline-icon {
+  left: auto;
+  right: -56px;
+}
+.timeline-item.alt:before {
+  display: none;
+}
+.timeline-item.alt .panel {
+  margin-left: 0;
+  margin-right: 45px;
+}
+.timeline-item.alt .panel .panel-body p + p {
+  margin-top: 10px !important;
+}
+.timeline-item.alt h4 {
+  text-align: right;
+}
+.timeline-item.alt p {
+  text-align: right;
+}
+.timeline-item.alt .timeline-date {
+  text-align: right;
+}
+.timeline-desk {
+  display: table-cell;
+  vertical-align: top;
+  width: 50%;
+}
+.timeline-desk h4 {
+  font-size: 16px;
+  font-weight: 300;
+  margin: 0;
+}
+.timeline-desk .panel {
+  background: #ffffff;
+  display: block;
+  margin-bottom: 5px;
+  margin-left: 45px;
+  position: relative;
+  text-align: left;
+}
+.timeline-desk h5 span {
+  color: #797979;
+  display: block;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+.timeline-desk p {
+  color: #999999;
+  font-size: 14px;
+  margin-bottom: 0;
+}
+.timeline-desk .album {
+  margin-top: 12px;
+}
+.timeline-desk .album a {
+  float: left;
+  margin-right: 5px;
+}
+.timeline-desk .album img {
+  height: 36px;
+  width: auto;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-border-radius: 3px;
+  background-clip: padding-box;
+}
+.timeline-desk .notification {
+  background: none repeat scroll 0 0 #ffffff;
+  margin-top: 20px;
+  padding: 8px;
+}

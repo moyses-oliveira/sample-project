@@ -1,0 +1,8 @@
+scope.txt
+App/Doctrine/generated
+App/Doctrine/sandbox
+vendor/
+Public/upload
+fuel/
+composer.lock
+.htaccess
