@@ -15,13 +15,13 @@ class ArticleCategory extends AbstractService {
 
     /**
      * 
-     * @param type $data
-     * @param type $pk
+     * @param \Data\Entity\Cms\ArticleCategory $entity
+     * @param array $input
      * @return type
-     * @throws \Entity
      */
-    public function save(EntryCollectionInterface $inspector, \Data\Entity\Cms\ArticleCategory $entity, array $input)
+    public function save(\Data\Entity\Cms\ArticleCategory $entity, array $input)
     {
+        $inspector = new \Data\Inspector\Cms\ArticleCategory();
         $inspector->fromArray($input);
         $success = $inspector->validate();
         $errors = $inspector->getErrors();

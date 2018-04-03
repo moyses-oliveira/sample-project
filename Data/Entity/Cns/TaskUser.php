@@ -22,22 +22,26 @@ class TaskUser extends AbstractEntity {
 	
     /**
      * @ORM\Column(name="fkUser", type="integer", length=10)
-     * @var integer     */
+     * @var integer 
+     */
     protected $fkUser;
 	
     /**
      * @ORM\Column(name="fkTask", type="integer", length=10)
-     * @var integer     */
+     * @var integer 
+     */
     protected $fkTask;
 	
     /**
-     * @ORM\Column(name="dttComplete", type="datetime", length=20)
-     * @var datetime     */
-    protected $dttComplete;
+     * @ORM\Column(name="dttChecked", type="datetime", length=20)
+     * @var datetime 
+     */
+    protected $dttChecked;
 	
     /**
      * @ORM\Column(name="dttDeleted", type="datetime", length=20)
-     * @var datetime     */
+     * @var datetime 
+     */
     protected $dttDeleted;
 	
     public function __construct($data=null)
@@ -76,14 +80,14 @@ class TaskUser extends AbstractEntity {
         $this->fkTask = $fkTask;
     }
 	
-    public function getDttComplete()
+    public function getDttChecked()
     {
-        return $this->dttComplete;
+        return $this->dttChecked;
     }
 	
-    public function setDttComplete($dttComplete)
+    public function setDttChecked($dttChecked)
     {
-        $this->dttComplete = $dttComplete;
+        $this->dttChecked = $dttChecked;
     }
 	
     public function getDttDeleted()

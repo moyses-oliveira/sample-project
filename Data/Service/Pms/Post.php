@@ -30,7 +30,7 @@ class Post extends AbstractService {
             throw new \Exception('No user are logged in.');
 
         if(!isset($input['enmType']))
-            $entity->setEnmType('TEXT');
+            $entity->setChrType('TEXT');
         
         if(!$entity->getId()):
             $entity->setFkUser($GLOBALS['user']['id']);

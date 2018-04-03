@@ -18,7 +18,7 @@ class ProfileModule extends AbstractRepository {
      */
     public function getOptions(): array
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select([
                 't.id',
                 't.vrcAlias AS module',
@@ -32,6 +32,9 @@ class ProfileModule extends AbstractRepository {
             ->where('t.dttDeleted IS NULL')
             ->orderBy('c.tnyPriority')->addOrderBy('t.tnyPriority')
             ->addOrderBy('t.vrcAlias');
+        
+        $qb->andWhere('c.vrcLabel NOT IN (:ignore)');
+        $qb->setParameter('ignore', ['system'], \Doctrine\DBAL\Connection::PARAM_STR_ARRAY);
         
         $results = $qb->getQuery()->getResult();
         $options = [];
@@ -47,7 +50,7 @@ class ProfileModule extends AbstractRepository {
      * @return array
      */
     public function getValues(string $fkProfile): array {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['m.id'])
             ->from('Data\Entity\Acl\ProfileModule', 't')
             ->join('Data\Entity\Acl\Module', 'm', Join::WITH, 'm.id=t.fkModule AND m.dttDeleted IS NULL')

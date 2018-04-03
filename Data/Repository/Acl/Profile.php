@@ -23,7 +23,7 @@ class Profile extends DataTableRepository {
         $orderKeys = ['t.vrcAlias', 't.vrcName'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['t.id', 't.vrcAlias', 't.vrcName'])
             ->from('Data\Entity\Acl\Profile', 't')
             ->where('t.dttDeleted IS NULL')
@@ -51,7 +51,7 @@ class Profile extends DataTableRepository {
         if(!$id)
             $id = '0';
         
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Acl\Profile', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id')

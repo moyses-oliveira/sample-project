@@ -45,7 +45,7 @@ class Info extends DataTableRepository {
         $orderKeys = ['t.dttPosted', 't.vrcSummary'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['t.id', 't.dttPosted', 't.vrcSummary'])
             ->from('Data\Entity\Cns\Info', 't')
             ->where('t.dttDeleted IS NULL')

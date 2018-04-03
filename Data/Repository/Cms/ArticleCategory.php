@@ -25,7 +25,7 @@ class ArticleCategory extends DataTableRepository {
         $orderKeys = ['g.vrcName', 't.vrcName', 't.vrcAlias'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select([
                 't.id',
                 't.vrcName AS categoryName',
@@ -42,6 +42,10 @@ class ArticleCategory extends DataTableRepository {
             $qb->orderBy($orderColumn, $dtr['dir']);
         endif;
 
+        
+        if(isset($request['fkGroup']))
+            $qb->andWhere('t.fkGroup=:fkGroup')->setParameter('fkGroup', $request['fkGroup']);
+            
         if(!$dtr['search'])
             return $qb;
 
@@ -58,10 +62,10 @@ class ArticleCategory extends DataTableRepository {
      * 
      * @return array
      */
-    public function options($fkGroup)
+    public function options($fkGroup, $useAliasAsKey = false)
     {
-        $data = $this->_em->createQueryBuilder()
-                ->select(['t.id', 't.vrcName'])
+        $data = $this->getEm()->createQueryBuilder()
+                ->select(['t.id', 't.vrcAlias', 't.vrcName'])
                 ->from('Data\Entity\Cms\ArticleCategory', 't')
                 ->where('t.dttDeleted IS NULL AND t.fkGroup=:fkGroup')
                 ->setParameter('fkGroup', $fkGroup)
@@ -69,8 +73,9 @@ class ArticleCategory extends DataTableRepository {
                 ->getResult();
 
         $options = [];
+        $key = $useAliasAsKey ?  'vrcAlias' : 'id'; 
         foreach($data as $f)
-            $options[$f['id']] = $f['vrcName'];
+            $options[$f[$key]] = $f['vrcName'];
 
         return $options;
     }
@@ -86,7 +91,7 @@ class ArticleCategory extends DataTableRepository {
         if(!$id)
             $id = '0';
         
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Cms\ArticleCategory', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id AND t.fkGroup = :fkGroup')

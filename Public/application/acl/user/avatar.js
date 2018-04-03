@@ -1,9 +1,10 @@
 $(document).ready(function () {
     var $element = $('#avatar');
     var $file = $element.find(':file');
-
+    var endPoint = $element.data('endpoint');
+    var root = $.spell.UIV().mvc.route.root;
     $file.fileupload({
-        url: $.spell.UIV().mvc.route.site + 'user/upload-image',
+        url: endPoint,
         dataType: 'json',
         done: function (event, json) {
             if (!json.result) {
@@ -14,8 +15,8 @@ $(document).ready(function () {
             } else if (typeof json.result.data.src === 'undefined') {
                 window.bootbox.alert('No result');
             } else {
-                $element.find('[name=vrcImage]').val(json.result.data.src);
-                $element.find('img').css('background-image', 'url(' + json.result.data.src  + ')');
+                $element.find('[name=vrcImage]').val(root + json.result.data.src);
+                $element.find('img').css('background-image', 'url(' + root + json.result.data.src  + ')');
             }
             // $div.find('.progress-bar').css('width', '0px').html('');
         },

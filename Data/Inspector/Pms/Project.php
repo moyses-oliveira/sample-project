@@ -15,7 +15,9 @@ class Project extends EntryCollection {
 
     public function __construct()
     {
-        //$this->set(new Entry('fkGroup', 11))->isRequired();
+        $this->set(new Entry('fkStatus', 11))->isRequired();
+        
+        $this->set(new Entry('fkUser', 11))->isRequired();
 
         $this->set(new Entry('vrcName', 256))->isRequired();
 

@@ -60,7 +60,7 @@ abstract class AbstractController extends \Spell\MVC\AbstractController {
     {
         $title = Localization::T(get_called_class() . '::TITLE');
         $home = Tag::mk('i', 'fa fa-home')->render() . ' &nbsp;Home';
-        $homeUrl = Route::getRoot() . Path::combine(['acl', 'auth', 'dashboard'], '/');
+        $homeUrl = $GLOBALS['home'] ?? Route::getRoot() . Path::combine(['acl', 'auth', 'dashboard'], '/');
         $this->getBreadcrumb()->add($home, $homeUrl);
         $this->setTitle($title);
     }
@@ -114,6 +114,7 @@ abstract class AbstractController extends \Spell\MVC\AbstractController {
         parent::setTheme($theme);
         $GLOBALS['acl'] = $this->getSession()->get('acl');
         $GLOBALS['user'] = $this->getSession()->get('user');
+        $GLOBALS['profiles'] = $this->getSession()->get('profiles');
         return $this;
     }
 
@@ -154,16 +155,12 @@ abstract class AbstractController extends \Spell\MVC\AbstractController {
 
     protected function mkLogin()
     {
-        $this->redirect(Route::setUrl('acl', 'auth', 'login'));
+        $this->redirect($GLOBALS['loginUrl']);
     }
 
     protected function render($data = array(), $code = 200)
     {
         $GLOBALS['breadcrumb'] = $this->breadcrumb;
-        if(isset($GLOBALS['user'])):
-            $GLOBALS['totalNotifications'] = $this->getEm()
-            ->getRepository('Data\Entity\Cns\InfoUser')->getTotalNewMessagesByUser($GLOBALS['user']['id']);
-        endif;
         $this->getTheme()->getHead()->setTitle($this->title, $this->subtitle);
         parent::render($data, $code);
     }

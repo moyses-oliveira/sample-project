@@ -24,7 +24,7 @@ class Project extends DataTableRepository {
         $orderKeys = ['t.vrcName', 't.vrcAlias'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select([
                 't.id',
                 't.vrcName',
@@ -55,7 +55,7 @@ class Project extends DataTableRepository {
      */
     public function options()
     {
-        $data = $this->_em->createQueryBuilder()
+        $data = $this->getEm()->createQueryBuilder()
             ->select(['t.id', 't.vrcName'])
             ->from('Data\Entity\Pms\Project', 't')
             ->where('t.dttDeleted IS NULL')
@@ -81,7 +81,7 @@ class Project extends DataTableRepository {
         if(!$id)
             $id = '0';
 
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Pms\Project', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id')
@@ -92,7 +92,7 @@ class Project extends DataTableRepository {
     public function getByAlias(string $vrcAlias): \Data\Entity\Pms\Project
     {
         $entityName = get_class(new \Data\Entity\Pms\Project);
-        $response = $this->_em->createQueryBuilder()
+        $response = $this->getEm()->createQueryBuilder()
                 ->select(['t.id'])->from($entityName, 't')
                 ->where('t.dttDeleted IS NULL AND t.vrcAlias = :vrcAlias')
                 ->setParameters(compact('vrcAlias'))->getQuery()->getOneOrNullResult();
@@ -100,7 +100,7 @@ class Project extends DataTableRepository {
             throw \Exception('Project alias can\'t be found!');
 
 
-        return $this->_em->find($entityName, $response['id']);
+        return $this->getEm()->find($entityName, $response['id']);
     }
 
 }

@@ -20,8 +20,9 @@ class Profile extends AbstractService {
      * @return type
      * @throws \Entity
      */
-    public function save(EntryCollectionInterface $inspector, \Data\Entity\Acl\Profile $entity, array $input)
+    public function save(\Data\Entity\Acl\Profile $entity, array $input)
     {
+        $inspector = new \Data\Inspector\Acl\Profile();
         $inspector->fromArray($input);
         $success = $inspector->validate();
         $errors = $inspector->getErrors();

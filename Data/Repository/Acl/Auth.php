@@ -15,13 +15,14 @@ class Auth extends AbstractRepository {
 
     public function login(string $vrcEmail, string $vrbPass): string
     {
+        $email = strtolower($vrcEmail);
         $inspector = new \Data\Inspector\Acl\User();
-        $user = $this->getUserByEmail($vrcEmail);
+        $user = $this->getUserByEmail($email);
 
-        if(!$user)
+        if (!$user)
             return 'EMAIL';
 
-        if($user['vrbPass'] !== $inspector->hash($vrcEmail, $vrbPass))
+        if ($user['vrbPass'] !== $inspector->hash($email, $vrbPass))
             return 'PASS';
 
         return $user['id'];
@@ -29,7 +30,7 @@ class Auth extends AbstractRepository {
 
     public function getUserByEmail(string $vrcEmail): ?array
     {
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['t.id', 't.vrcName', 't.vrcEmail', 't.vrbPass', 't.vrcToken'])
                 ->from('Data\Entity\Acl\User', 't')
                 ->where('t.vrcEmail=:vrcEmail AND t.dttDeleted IS NULL')
@@ -40,7 +41,7 @@ class Auth extends AbstractRepository {
 
     public function getUserById(string $id)
     {
-        $result = $this->_em->createQueryBuilder()
+        $result = $this->getEm()->createQueryBuilder()
             ->select(['t.id AS id', 't.vrcName AS name', 't.vrcEmail AS email', 't.vrcImage AS image', 't.vrcToken AS token'])
             ->from('Data\Entity\Acl\User', 't')
             ->where('t.id=:id')
@@ -48,19 +49,19 @@ class Auth extends AbstractRepository {
             ->getQuery()
             ->getOneOrNullResult();
 
-        $result['icon'] = Gallery::toSize($result['image'], 'icon');
+        $result['icon'] = isset($result['image']) ? Gallery::toSize($result['image'], 'icon') : '';
         return $result;
     }
 
     public function getSessionParams(string $fkUser)
     {
-        $results = $this->getUserAppModules($fkUser);
+        $results = $this->isDev($fkUser) ? $this->getAllAppModules() : $this->getUserAppModules($fkUser);
         $auth = [];
         $acl = [];
-        foreach($results as $v):
+        foreach ($results as $v):
             $auth[] = [$v['app'], $v['alias']];
             $k = $v['id'];
-            if(!isset($acl[$k]))
+            if (!isset($acl[$k]))
                 $acl[$k] = [$v['icon'], $v['category'], []];
 
             $acl[$k][2][] = [$v['app'], $v['alias'], []];
@@ -73,7 +74,7 @@ class Auth extends AbstractRepository {
      */
     private function getUserAppModules(string $fkUser): array
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
 
         $qb->select([
                 'c.id',
@@ -93,6 +94,74 @@ class Auth extends AbstractRepository {
             ->groupBy('m.id');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @return array
+     */
+    private function getAllAppModules(): array
+    {
+        $qb = $this->getEm()->createQueryBuilder();
+
+        $qb->select([
+                'c.id',
+                'c.vrcIcon as icon',
+                'c.vrcLabel as category',
+                'a.vrcAlias as app',
+                'm.vrcAlias as alias'
+            ])
+            ->from('Data\Entity\Acl\Module', 'm')
+            ->join('Data\Entity\Acl\App', 'a', Join::WITH, 'a.id=m.fkApp AND a.dttDeleted IS NULL')
+            ->join('Data\Entity\Acl\Category', 'c', Join::WITH, 'c.id=m.fkCategory AND c.dttDeleted IS NULL')
+            ->where('m.dttDeleted IS NULL')
+            ->orderBy('c.tnyPriority')->addOrderBy('m.tnyPriority')
+            ->groupBy('m.id');
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function getProfiles(string $fkUser): array
+    {
+        return $this->isDev($fkUser) ? $this->getAllProfiles() : $this->getUserProfiles($fkUser);
+    }
+    
+    /**
+     * 
+     * @param string $fkUser
+     * @return array
+     */
+    private function getUserProfiles(string $fkUser): array
+    {
+        $qb = $this->getEm()->createQueryBuilder();
+
+        $qb->select(['p.vrcAlias'])
+            ->from('Data\Entity\Acl\UserProfile', 't')
+            ->join('Data\Entity\Acl\Profile', 'p', Join::WITH, 'p.id=t.fkProfile AND p.dttDeleted IS NULL')
+            ->where('t.dttDeleted IS NULL AND t.fkUser=:fkUser')
+            ->setParameters(compact('fkUser'));
+        $result = $qb->getQuery()->getResult();
+        return array_column($result, 'vrcAlias');
+    }
+
+    /**
+     * 
+     * @param string $fkUser
+     * @return array
+     */
+    private function getAllProfiles(): array
+    {
+        $qb = $this->getEm()->createQueryBuilder();
+
+        $qb->select(['t.vrcAlias'])
+            ->from('Data\Entity\Acl\Profile', 't')
+            ->where('t.dttDeleted IS NULL');
+        $result = $qb->getQuery()->getResult();
+        return array_column($result, 'vrcAlias');
+    }
+
+    private function isDev(string $fkUser)
+    {
+        return $this->getEm()->find(\Data\Entity\Acl\User::class, $fkUser)->getChrType() === 'dev';
     }
 
 }

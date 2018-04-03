@@ -19,149 +19,149 @@ class Post extends AbstractEntity {
      * @var integer 
      */
     protected $id;
-
+	
     /**
      * @ORM\Column(name="fkProject", type="integer", length=10)
      * @var integer 
      */
     protected $fkProject;
-
+	
     /**
      * @ORM\Column(name="fkUser", type="integer", length=10)
      * @var integer 
      */
     protected $fkUser;
-
+	
     /**
-     * @ORM\Column(name="enmType", type="string", length=8)
+     * @ORM\Column(name="chrType", type="string", length=32)
      * @var string 
      */
-    protected $enmType;
-
+    protected $chrType;
+	
     /**
      * @ORM\Column(name="vrcTitle", type="string", length=256)
      * @var string 
      */
     protected $vrcTitle;
-
+	
     /**
      * @ORM\Column(name="txtNote", type="string", length=65535)
      * @var string 
      */
     protected $txtNote;
-
+	
     /**
      * @ORM\Column(name="dttCreated", type="datetime", length=20)
      * @var datetime 
      */
     protected $dttCreated;
-
+	
     /**
      * @ORM\Column(name="dttUpdated", type="datetime", length=20)
      * @var datetime 
      */
     protected $dttUpdated;
-
+	
     /**
      * @ORM\Column(name="dttDeleted", type="datetime", length=20)
      * @var datetime 
      */
     protected $dttDeleted;
-
-    public function __construct($data = null)
+	
+    public function __construct($data=null)
     {
         if($data)
             $this->fromArray($data);
     }
-
+	
     public function getId()
     {
         return $this->id;
     }
-
+	
     public function setId($id)
     {
         $this->id = $id;
     }
-
+	
     public function getFkProject()
     {
         return $this->fkProject;
     }
-
+	
     public function setFkProject($fkProject)
     {
         $this->fkProject = $fkProject;
     }
-
+	
     public function getFkUser()
     {
         return $this->fkUser;
     }
-
+	
     public function setFkUser($fkUser)
     {
         $this->fkUser = $fkUser;
     }
-
-    public function getEnmType()
+	
+    public function getChrType()
     {
-        return $this->enmType;
+        return $this->chrType;
     }
-
-    public function setEnmType($enmType)
+	
+    public function setChrType($chrType)
     {
-        $this->enmType = $enmType;
+        $this->chrType = $chrType;
     }
-
+	
     public function getVrcTitle()
     {
         return $this->vrcTitle;
     }
-
+	
     public function setVrcTitle($vrcTitle)
     {
         $this->vrcTitle = $vrcTitle;
     }
-
+	
     public function getTxtNote()
     {
         return $this->txtNote;
     }
-
+	
     public function setTxtNote($txtNote)
     {
         $this->txtNote = $txtNote;
     }
-
+	
     public function getDttCreated()
     {
         return $this->dttCreated;
     }
-
+	
     public function setDttCreated($dttCreated)
     {
         $this->dttCreated = $dttCreated;
     }
-
+	
     public function getDttUpdated()
     {
         return $this->dttUpdated;
     }
-
+	
     public function setDttUpdated($dttUpdated)
     {
         $this->dttUpdated = $dttUpdated;
     }
-
+	
     public function getDttDeleted()
     {
         return $this->dttDeleted;
     }
-
+	
     public function setDttDeleted($dttDeleted)
     {
         $this->dttDeleted = $dttDeleted;
     }
-
+	
 }

@@ -19,7 +19,7 @@ class Timeline {
 
     public static function row(array $data)
     {
-        switch($data['enmType']):
+        switch($data['chrType']):
             case 'TEXT':
                 return static::textRow($data);
         endswitch;

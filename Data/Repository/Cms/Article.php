@@ -24,43 +24,47 @@ class Article extends DataTableRepository {
         $orderKeys = ['t.vrcTitle', 'c.vrcName'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['t.id', 't.fkGroup', 't.vrcTitle', 'c.vrcName AS vrcCategory'])
             ->from('Data\Entity\Cms\Article', 't')
-            ->join('Data\Entity\Cms\ArticleCategory', 'c', Join::WITH, 'c.id=t.fkCategory')
+            ->leftJoin('Data\Entity\Cms\ArticleCategory', 'c', Join::WITH, 'c.id=t.fkCategory')
             ->where('t.dttDeleted IS NULL')
             ->orderBy($orderColumn, $dtr['dir']);
-            
 
-        if(!$dtr['search'])
+        if (isset($request['fkGroup']))
+            $qb->andWhere('t.fkGroup=:fkGroup')->setParameter('fkGroup', $request['fkGroup']);
+
+
+        if (!$dtr['search'])
             return $qb;
 
-            $search = '%' . $dtr['search'] . '%';
-            $qb->andWhere('(c.vrcName LIKE :vrcName OR t.vrcTitle LIKE :vrcTitle)');
-            $qb->setParameter('vrcTitle', $search);
-            $qb->setParameter('vrcName', $search);
+        $search = '%' . $dtr['search'] . '%';
+        $qb->andWhere('(c.vrcName LIKE :vrcName OR t.vrcTitle LIKE :vrcTitle)');
+        $qb->setParameter('vrcTitle', $search);
+        $qb->setParameter('vrcName', $search);
 
         return $qb;
     }
-    
+
     /**
      * 
      * @param string $id
-     * @param string $vrcTitle
-     * @param string $vrcEmail
+     * @param string $vrcAlias
+     * @param int $fkGroup
      * @return type
      */
-    public function isRepeated($id, string $vrcAlias)
+    public function isRepeated($id, string $vrcAlias, int $fkGroup)
     {
-        if(!$id)
+        if (!$id)
             $id = '0';
-        
-        return $this->_em->createQueryBuilder()
+
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Cms\Article', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id')
                 ->andWhere('(t.vrcAlias LIKE :vrcAlias)')
-                ->setParameters(compact('id', 'vrcAlias'))->getQuery()->getOneOrNullResult()['total'] > 0;
+                ->andWhere('(t.fkGroup=:fkGroup)')
+                ->setParameters(compact('id', 'vrcAlias', 'fkGroup'))->getQuery()->getOneOrNullResult()['total'] > 0;
     }
 
 }

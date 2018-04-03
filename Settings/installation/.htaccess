@@ -1,0 +1,33 @@
+#php_value error_reporting 7
+php_value error_reporting 30719 
+php_flag display_errors on
+
+#SetEnv DB_PRIMARY_HOST "127.0.0.1"
+#SetEnv DB_PRIMARY_USER "root"
+#SetEnv DB_PRIMARY_PASS "321"
+#SetEnv DB_PRIMARY_DB "db_name"
+
+#SetEnv NOTIFY_EMAIL "sistema@email.com"
+#SetEnv NOTIFY_NAME "Notificação do Sistema"
+
+#SetEnv SMTP_HOST "smtp.gmail.com"
+#SetEnv SMTP_EMAIL "...@gmail.com"
+#SetEnv SMTP_PASS "password"
+#SetEnv SMTP_PORT "465"
+#SetEnv SMTP_SECURITY "ssl"
+
+
+<IfModule mod_rewrite.c>
+	#AllowOverride All
+	RewriteEngine on
+	
+	RewriteCond %{REQUEST_URI} "/Public/" [OR]
+	RewriteCond %{REQUEST_URI} "/Public/"
+	RewriteRule (.*) $1 [L]
+	
+	RewriteRule s3/(.*) s3.php?path=$1 [L]
+	RewriteRule ^download/ index.php [L]
+	RewriteRule !\.()$ index.php
+	RewriteRule sitemap.xml sitemap.xml
+
+</IfModule>

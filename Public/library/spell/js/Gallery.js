@@ -51,11 +51,12 @@
             if (!options.readonly)
                 $head.append(me.actionButtons());
 
+            var url = typeof data.url === 'undefined' ? '/' : data.url;
             var png = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
             var $img = $('<img/>').attr('src', png);
-            $img.css('background-image', 'url(' + data.thumb + ')');
+            $img.css('background-image', 'url(' + url + data.thumb + ')');
             var $a = $('<a/>').addClass('expand col-md-4');
-            $a.attr('href', data.src).attr('target', '_blank').append($img[0]);
+            $a.attr('href', url + data.src).attr('target', '_blank').append($img[0]);
             $a.append(me.dataField(data));
             var $fields = $('<div/>').addClass('col-md-8');
             $fields.append(me.summaryField(data.summary));

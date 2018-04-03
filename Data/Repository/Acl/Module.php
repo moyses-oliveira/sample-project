@@ -25,7 +25,7 @@ class Module extends DataTableRepository {
         $orderKeys = ['c.vrcLabel', 'a.vrcAlias', 't.vrcAlias'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select([
                 't.id',
                 'c.vrcLabel AS category',
@@ -69,7 +69,7 @@ class Module extends DataTableRepository {
         if(!$id)
             $id = '0';
         
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Acl\Module', 't')
                 ->where('t.dttDeleted IS NULL')

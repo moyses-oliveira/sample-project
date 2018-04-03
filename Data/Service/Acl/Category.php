@@ -2,12 +2,11 @@
 
 namespace Data\Service\Acl;
 
-use Spell\Data\Inspector\EntryCollectionInterface;
 use Spell\Data\Doctrine\AbstractService;
 use Spell\Flash\Localization;
 
 /**
- * Service save acl_app
+ * Service acl_category
  *
  * @author moysesoliveira
  */
@@ -15,13 +14,13 @@ class Category extends AbstractService {
 
     /**
      * 
-     * @param type $data
-     * @param type $pk
-     * @return type
-     * @throws \Entity
+     * @param \Data\Entity\Acl\Category $entity
+     * @param array $input
+     * @return array
      */
-    public function save(EntryCollectionInterface $inspector, \Data\Entity\Acl\Category $entity, array $input)
+    public function save(\Data\Entity\Acl\Category $entity, array $input): array
     {
+        $inspector = new \Data\Inspector\Acl\Category();
         $inspector->fromArray($input);
         $success = $inspector->validate();
         $errors = $inspector->getErrors();
@@ -32,7 +31,7 @@ class Category extends AbstractService {
         endif;
 
         if($success)
-            $entity->persist($inspector->normalize($input));
+            $entity->persist($inspector->normalize());
 
         $data = $entity->toArray();
         return compact('success', 'errors', 'data');

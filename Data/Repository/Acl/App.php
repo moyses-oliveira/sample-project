@@ -23,7 +23,7 @@ class App extends DataTableRepository {
         $orderKeys = ['t.vrcAlias'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['t.id', 't.vrcAlias'])
             ->from('Data\Entity\Acl\App', 't')
             ->where('t.dttDeleted IS NULL')
@@ -45,7 +45,7 @@ class App extends DataTableRepository {
      */
     public function options()
     {
-        $data = $this->_em->createQueryBuilder()
+        $data = $this->getEm()->createQueryBuilder()
                 ->select(['t.id', 't.vrcAlias'])
                 ->from('Data\Entity\Acl\App', 't')
                 ->where('t.dttDeleted IS NULL')
@@ -70,7 +70,7 @@ class App extends DataTableRepository {
         if(!$id)
             $id = '0';
 
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Acl\App', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id')

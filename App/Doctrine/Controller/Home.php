@@ -74,7 +74,7 @@ class Home extends AbstractController {
             "cache_dir"     => realpath($this->getTheme()->getView('content')->getPath() . '/../Cache') . '/' 
         ]);
         $rain = new \Rain\Tpl();
-        $rain->objectConfigure(['tpl_ext' => 'tpl', 'auto_escape' => false, 'cache_dir' => App::getPath() . 'sandbox']);
+        $rain->objectConfigure(['tpl_ext' => 'tpl', 'auto_escape' => false, 'cache_dir' => App::getPath() . 'sandbox' . DIRECTORY_SEPARATOR]);
         $rain->assign('table', $table);
         $rain->assign('tbConf', $tbConf);
         $rain->assign('pk', $pk);

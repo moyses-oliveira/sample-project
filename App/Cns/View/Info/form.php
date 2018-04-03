@@ -16,12 +16,26 @@ if($saved)
 
 $form->warnings();
 
+$tnyLevel = new Select('tnyLevel', $levelCollection, 'Prioridade', 'Selecione ...');
+$form->set($tnyLevel);
 $form->set(new Text('vrcSummary', 128, 'Resumo', '', ['placeholder'=>'...']))->required();
 $form->set(new Textarea('vrcDescription', 2048, 'Descrição', '', ['placeholder'=>'']))->required();
 
-$users = new CheckboxGroup('Selecione os Usuários', 'users', $users);
-$users->setValues($usersEnabled);
-$form->addChild('users', $users);
+
+$userCollection = new CheckboxGroup('Selecione os Usuários', 'users', $users);
+foreach($userCollection->getCollection() as &$user):
+    $user->getBox()->addClass('col-md-4 col-sm-6 col-xs-12');
+    $user->getField()->addClass('user-checkbox');
+endforeach;
+    
+$userCollection->setValues($usersEnabled);
+
+$groups['all'] = 'Todos';
+$group = new Select('groups', $groups, 'Grupo', 'Nenhum');
+$group->getField()->setAttr('cns-form-group-selector', 'true');
+$userCollection->getFieldset()->preppendChild($group);
+
+$form->addChild('users', $userCollection);
 
 $form->set(new Submit('submit', 'Salvar', ''));
 

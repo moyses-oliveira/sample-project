@@ -125,6 +125,7 @@ class ArticleAttachment extends AbstractService {
     private function insert(array $params)
     {
         $entity = new \Data\Entity\Cms\ArticleAttachment();
+        $params['dttAdded'] = new \DateTime();
         $entity->persist($params);
         return $entity;
     }

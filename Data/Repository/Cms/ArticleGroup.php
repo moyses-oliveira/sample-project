@@ -23,7 +23,7 @@ class ArticleGroup extends DataTableRepository {
         $orderKeys = ['t.vrcName', 't.vrcAlias'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['t.id', 't.vrcName', 't.vrcAlias'])
             ->from('Data\Entity\Cms\ArticleGroup', 't')
             ->where('t.dttDeleted IS NULL')
@@ -46,7 +46,7 @@ class ArticleGroup extends DataTableRepository {
      */
     public function options()
     {
-        $data = $this->_em->createQueryBuilder()
+        $data = $this->getEm()->createQueryBuilder()
                 ->select(['t.id', 't.vrcName'])
                 ->from('Data\Entity\Cms\ArticleGroup', 't')
                 ->where('t.dttDeleted IS NULL')
@@ -71,12 +71,22 @@ class ArticleGroup extends DataTableRepository {
         if(!$id)
             $id = '0';
         
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Cms\ArticleGroup', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id')
                 ->andWhere('(t.vrcAlias LIKE :vrcAlias OR t.vrcName LIKE :vrcName)')
                 ->setParameters(compact('id', 'vrcName', 'vrcAlias'))->getQuery()->getOneOrNullResult()['total'] > 0;
+    }
+    
+    public function getByAlias(string $vrcAlias): ?\Data\Entity\Cms\ArticleGroup {
+        $result = $this->getEm()->createQueryBuilder()
+                ->select('t')
+                ->from('Data\Entity\Cms\ArticleGroup', 't')
+                ->where('t.dttDeleted IS NULL AND t.vrcAlias LIKE :vrcAlias')
+                ->setParameters(compact('vrcAlias'))->getQuery()->getOneOrNullResult();
+        
+        return $result;
     }
 
 }

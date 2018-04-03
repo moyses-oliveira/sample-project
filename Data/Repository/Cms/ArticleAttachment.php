@@ -17,18 +17,41 @@ class ArticleAttachment extends AbstractRepository {
      */
     public function getFromArticle($fkArticle)
     {
-        $qb = $this->_em->createQueryBuilder()
+        $qb = $this->getEm()->createQueryBuilder()
                 ->select([
                     't.id', 
                     't.vrcSrc AS src',
                     't.chrExt AS ext',
-                    't.vrcName AS name'
+                    't.vrcName AS name',
+                    't.dttAdded AS added'
                 ])
                 ->from('Data\Entity\Cms\ArticleAttachment', 't')
                 ->where('t.dttDeleted IS NULL AND t.fkArticle=:fkArticle')
                 ->setParameter('fkArticle', $fkArticle);
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * 
+     * @return array
+     */
+    public function getLastFromArticle($fkArticle)
+    {
+        $qb = $this->getEm()->createQueryBuilder()
+                ->select([
+                    't.id', 
+                    't.vrcSrc AS src',
+                    't.chrExt AS ext',
+                    't.vrcName AS name',
+                    't.dttAdded AS added'
+                ])
+                ->from('Data\Entity\Cms\ArticleAttachment', 't')
+                ->where('t.dttDeleted IS NULL AND t.fkArticle=:fkArticle')
+                ->setParameter('fkArticle', $fkArticle)
+                ->orderBy('t.id', 'DESC');
+
+        return $qb->getQuery()->getOneOrNullResult();
     }
 
 }

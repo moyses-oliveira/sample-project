@@ -50,8 +50,8 @@ class Module extends AbstractController {
     public function save(?string $pk = null)
     {
         $inspector = new \Data\Inspector\Acl\Module();
-        $entity = (new \Data\Entity\Acl\Module)->load($pk);
-        if(!$entity)
+        $entity = new \Data\Entity\Acl\Module();
+        if(!!$pk && !$entity->load($pk))
             return $this->json403();
 
         $response = (new \Data\Service\Acl\Module())->save($inspector, $entity, $_POST);

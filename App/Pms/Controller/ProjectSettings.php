@@ -51,10 +51,12 @@ class ProjectSettings extends AbstractController {
     public function save(?string $pk = null)
     {
         $inspector = new \Data\Inspector\Pms\Project();
-        $entity = (new \Data\Entity\Pms\Project)->load($pk);
-        if(!$entity)
+        $entity = new \Data\Entity\Pms\Project();
+        if(!!$pk && !$entity->load($pk))
             return $this->json403();
-
+        
+        $_POST['fkStatus'] = 1;
+        $_POST['fkUser'] = $GLOBALS['user']['id'];
         $response = (new \Data\Service\Pms\Project())->save($inspector, $entity, $_POST);
         $response['redirect'] = Route::link(Route::getModule(), 'update', $response['data']['id']);
 

@@ -21,28 +21,45 @@ class Message extends AbstractEntity {
     protected $id;
 	
     /**
+     * @ORM\Column(name="tnyLevel", type="integer", length=3)
+     * @var integer 
+     */
+    protected $tnyLevel;
+	
+    /**
      * @ORM\Column(name="fkFromUser", type="integer", length=10)
-     * @var integer     */
+     * @var integer 
+     */
     protected $fkFromUser;
 	
     /**
      * @ORM\Column(name="fkToUser", type="integer", length=10)
-     * @var integer     */
+     * @var integer 
+     */
     protected $fkToUser;
 	
     /**
      * @ORM\Column(name="vrcMessage", type="string", length=2048)
-     * @var string     */
+     * @var string 
+     */
     protected $vrcMessage;
 	
     /**
      * @ORM\Column(name="dttPosted", type="datetime", length=20)
-     * @var datetime     */
+     * @var datetime 
+     */
     protected $dttPosted;
 	
     /**
+     * @ORM\Column(name="dttCompleted", type="datetime", length=20)
+     * @var datetime 
+     */
+    protected $dttCompleted;
+	
+    /**
      * @ORM\Column(name="dttDeleted", type="datetime", length=20)
-     * @var datetime     */
+     * @var datetime 
+     */
     protected $dttDeleted;
 	
     public function __construct($data=null)
@@ -59,6 +76,16 @@ class Message extends AbstractEntity {
     public function setId($id)
     {
         $this->id = $id;
+    }
+	
+    public function getTnyLevel()
+    {
+        return $this->tnyLevel;
+    }
+	
+    public function setTnyLevel($tnyLevel)
+    {
+        $this->tnyLevel = $tnyLevel;
     }
 	
     public function getFkFromUser()
@@ -99,6 +126,16 @@ class Message extends AbstractEntity {
     public function setDttPosted($dttPosted)
     {
         $this->dttPosted = $dttPosted;
+    }
+	
+    public function getDttCompleted()
+    {
+        return $this->dttCompleted;
+    }
+	
+    public function setDttCompleted($dttCompleted)
+    {
+        $this->dttCompleted = $dttCompleted;
     }
 	
     public function getDttDeleted()

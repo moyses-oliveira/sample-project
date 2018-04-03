@@ -4,7 +4,7 @@
 
 // Add header meta
 $this->getHead()->addMeta(['http-equiv' => 'Content-Type', 'content' => 'text/html; charset=UTF-8']);
-            
+
 // Add header css
 $this->getHead()->addCss([
     'library/adminto/css/bootstrap.min.css',
@@ -16,7 +16,8 @@ $this->getHead()->addCss([
     'library/datatables/dataTables.bootstrap.css',
     'library/spell/css/Bootstrap.fix.css',
     'library/notifications/notifications.css',
-    'library/adminto/css/responsive.css'
+    'library/adminto/css/responsive.css',
+    'library/faloading/jquery.faloading.css'
 ]);
 
 // Add header js
@@ -42,7 +43,9 @@ $this->getHead()->addJs([
     'library/spell/js/DataTable.js',
     'library/spell/js/UIV.js',
     'library/spell/js/Validator.js',
-    'application/cns/js/notifications.js'
+    'application/cns/js/notifications.js',
+    'library/faloading/jquery.faloading.js',
+    'application/initializer.js'
 ]);
 
 // Seting-up wireframes aliases who will have contents

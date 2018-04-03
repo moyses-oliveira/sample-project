@@ -23,7 +23,7 @@ class Category extends DataTableRepository {
         $orderKeys = ['t.tnyPriority', 't.vrcLabel'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['t.id', 't.vrcIcon', 't.vrcLabel'])
             ->from('Data\Entity\Acl\Category', 't')
             ->where('t.dttDeleted IS NULL')
@@ -35,7 +35,6 @@ class Category extends DataTableRepository {
         $search = '%' . $dtr['search'] . '%';
         $qb->andWhere('(t.vrcLabel LIKE :name)');
         $qb->setParameter('name', $search);
-        $qb->setParameter('alias', $search);
 
         return $qb;
     }
@@ -46,7 +45,7 @@ class Category extends DataTableRepository {
      */
     public function options()
     {
-        $data = $this->_em->createQueryBuilder()
+        $data = $this->getEm()->createQueryBuilder()
                 ->select(['t.id', 't.vrcLabel'])
                 ->from('Data\Entity\Acl\Category', 't')
                 ->where('t.dttDeleted IS NULL')
@@ -71,7 +70,7 @@ class Category extends DataTableRepository {
         if(!$id)
             $id = '0';
         
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Acl\Category', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id')

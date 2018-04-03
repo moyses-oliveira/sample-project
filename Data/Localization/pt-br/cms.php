@@ -1,7 +1,8 @@
 <?php
 return [
     # TITLE
-    'App\Cms\Controller\Article::TITLE' => 'Grupo de Artigo',
+    'App\Cms\Controller\Article::GROUP_TITLE' => 'Grupo de Artigo',
+    'App\Cms\Controller\Article::TITLE' => 'Artigo',
     'App\Cms\Controller\ArticleCategory::TITLE' => 'Categorias',
     
     # ERRORS

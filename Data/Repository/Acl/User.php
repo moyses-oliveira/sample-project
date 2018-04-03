@@ -23,10 +23,11 @@ class User extends DataTableRepository {
         $orderKeys = ['t.vrcName', 't.vrcEmail'];
         $orderColumn = $orderKeys[$dtr['order']];
 
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['t.id', 't.vrcName', 't.vrcEmail'])
             ->from('Data\Entity\Acl\User', 't')
-            ->where('t.dttDeleted IS NULL')
+            ->where('t.dttDeleted IS NULL AND t.chrType!=:dev')
+            ->setParameter('dev', 'dev')
             ->orderBy($orderColumn, $dtr['dir']);
 
         if(!$dtr['search'])
@@ -52,12 +53,26 @@ class User extends DataTableRepository {
         if(!$id)
             $id = '0';
         
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Acl\User', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id')
                 ->andWhere('(t.vrcEmail LIKE :vrcEmail)')
                 ->setParameters(compact('id', 'vrcEmail'))->getQuery()->getOneOrNullResult()['total'] > 0;
+    }
+    
+    /**
+     * 
+     * @param string $vrcEmail
+     * @return \Data\Entity\Acl\User|null
+     */
+    public function getByEmail(string $vrcEmail): ?\Data\Entity\Acl\User
+    {
+        return $this->getEm()->createQueryBuilder()
+                ->select('t')
+                ->from('Data\Entity\Acl\User', 't')
+                ->where('t.dttDeleted IS NULL AND t.vrcEmail LIKE :vrcEmail')
+                ->setParameter('vrcEmail', strtolower($vrcEmail))->getQuery()->getOneOrNullResult();
     }
 
 }

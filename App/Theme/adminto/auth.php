@@ -14,7 +14,7 @@ $body->appendChild(Tag::div('clearfix'));
     // Wrapper
     $wrapper = Tag::div('wrapper-page clearfix');
         $logo = Tag::div('text-center');
-        $logo->appendChild(Tag::mk('a', 'logo')->setAttr('href', 'index.html')->setContent('<span>Admin<span>to</span></span>'));
+        $logo->appendChild(Tag::mk('a', 'logo')->setAttr('href', 'index.html')->setContent('<span>Admin <span>Sample</span></span>'));
         $logo->appendChild(Tag::mk('h5', 'text-muted m-t-0 font-600')->setContent('Responsive Admin Dashboard'));
 
         $art = $this->getHead()->getTitle();

@@ -21,23 +21,57 @@ class Task extends AbstractEntity {
     protected $id;
 	
     /**
-     * @ORM\Column(name="vrcSummary", type="string", length=128)
-     * @var string     */
+     * @ORM\Column(name="chrId", type="string", length=128)
+     * @var string 
+     */
+    protected $chrId;
+	
+    /**
+     * @ORM\Column(name="fkUser", type="integer", length=10)
+     * @var integer 
+     */
+    protected $fkUser;
+	
+    /**
+     * @ORM\Column(name="chrFlag", type="string", length=32)
+     * @var string 
+     */
+    protected $chrFlag;
+	
+    /**
+     * @ORM\Column(name="vrcSummary", type="string", length=256)
+     * @var string 
+     */
     protected $vrcSummary;
 	
     /**
-     * @ORM\Column(name="vrcDescription", type="string", length=2048)
-     * @var string     */
+     * @ORM\Column(name="vrcDescription", type="string", length=4096)
+     * @var string 
+     */
     protected $vrcDescription;
 	
     /**
+     * @ORM\Column(name="vrcUrl", type="string", length=2048)
+     * @var string 
+     */
+    protected $vrcUrl;
+	
+    /**
      * @ORM\Column(name="dttPosted", type="datetime", length=20)
-     * @var datetime     */
+     * @var datetime 
+     */
     protected $dttPosted;
 	
     /**
+     * @ORM\Column(name="dttFinished", type="datetime", length=20)
+     * @var datetime 
+     */
+    protected $dttFinished;
+	
+    /**
      * @ORM\Column(name="dttDeleted", type="datetime", length=20)
-     * @var datetime     */
+     * @var datetime 
+     */
     protected $dttDeleted;
 	
     public function __construct($data=null)
@@ -54,6 +88,36 @@ class Task extends AbstractEntity {
     public function setId($id)
     {
         $this->id = $id;
+    }
+	
+    public function getChrId()
+    {
+        return $this->chrId;
+    }
+	
+    public function setChrId($chrId)
+    {
+        $this->chrId = $chrId;
+    }
+	
+    public function getFkUser()
+    {
+        return $this->fkUser;
+    }
+	
+    public function setFkUser($fkUser)
+    {
+        $this->fkUser = $fkUser;
+    }
+	
+    public function getChrFlag()
+    {
+        return $this->chrFlag;
+    }
+	
+    public function setChrFlag($chrFlag)
+    {
+        $this->chrFlag = $chrFlag;
     }
 	
     public function getVrcSummary()
@@ -76,6 +140,16 @@ class Task extends AbstractEntity {
         $this->vrcDescription = $vrcDescription;
     }
 	
+    public function getVrcUrl()
+    {
+        return $this->vrcUrl;
+    }
+	
+    public function setVrcUrl($vrcUrl)
+    {
+        $this->vrcUrl = $vrcUrl;
+    }
+	
     public function getDttPosted()
     {
         return $this->dttPosted;
@@ -84,6 +158,16 @@ class Task extends AbstractEntity {
     public function setDttPosted($dttPosted)
     {
         $this->dttPosted = $dttPosted;
+    }
+	
+    public function getDttFinished()
+    {
+        return $this->dttFinished;
+    }
+	
+    public function setDttFinished($dttFinished)
+    {
+        $this->dttFinished = $dttFinished;
     }
 	
     public function getDttDeleted()

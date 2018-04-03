@@ -53,12 +53,11 @@ class Profile extends AbstractController {
 
     public function save(?string $pk = null)
     {
-        $inspector = new \Data\Inspector\Acl\Profile();
-        $entity = (new \Data\Entity\Acl\Profile)->load($pk);
-        if(!$entity)
+        $entity = new \Data\Entity\Acl\Profile();
+        if(!!$pk && !$entity->load($pk))
             return $this->json403();
 
-        $response = (new \Data\Service\Acl\Profile())->save($inspector, $entity, $_POST);
+        $response = (new \Data\Service\Acl\Profile())->save($entity, $_POST);
         $response['redirect'] = Route::link(Route::getModule(), 'update', $response['data']['id']);
 
         if($response['success'])

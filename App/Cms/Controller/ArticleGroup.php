@@ -7,8 +7,6 @@ use Spell\MVC\Flash\Route;
 
 class ArticleGroup extends AbstractController {
 
-    public $isPublic = true;
-
     public function index()
     {
         return $this->render();
@@ -48,8 +46,8 @@ class ArticleGroup extends AbstractController {
     public function save(?string $pk = null)
     {
         $inspector = new \Data\Inspector\Cms\ArticleGroup();
-        $entity = (new \Data\Entity\Cms\ArticleGroup)->load($pk);
-        if(!$entity)
+        $entity = new \Data\Entity\Cms\ArticleGroup();
+        if(!!$pk && !$entity->load($pk))
             return $this->json403();
 
         $response = (new \Data\Service\Cms\ArticleGroup())->save($inspector, $entity, $_POST);

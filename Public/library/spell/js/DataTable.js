@@ -1,18 +1,20 @@
 +function ($) {
     'use strict';
-    
+
     if (typeof $.spell === 'undefined')
         $.spell = {};
 
     $(document).ready(function () {
-        $('[data-spell_data_table]').each(function(){
-            $.spell.DataTable($(this));
+        $('[data-spell_data_table]').each(function () {
+            var spellDataTable = $.spell.DataTable($(this));
+            spellDataTable.init();
         });
     });
 
     $.spell.DataTable = function ($element) {
         var me = this;
 
+        me._datatable = null;
         this.rowConfig = function (nRow, rowData, iDisplayIndex, iDisplayIndexFull) {
             $('td', nRow).find('a.confirm_delete').click(function (e) {
                 me.confirmDelete(this, e, rowData);
@@ -35,14 +37,14 @@
             return dttb_columns;
         };
 
-        this.buttonConfig = function (element, buttons) {
+        me.buttonConfig = function (element, buttons) {
             $.each(buttons, function (k, btn) {
                 var button = {tag: 'a', href: btn.url, class: 'btn btn-sm btn-primary pull-right', content: btn.content};
                 element.prepend($.spell.HTML(button));
             });
         };
 
-        this.actionBtns = function (actions, data) {
+        me.actionBtns = function (actions, data) {
             var actionButtons = [];
 
             $.each(actions, function (key, action) {
@@ -71,18 +73,18 @@
             return me.render(mainDivHTML, data);
         };
 
-        this.normalize = function (str) {
+        me.normalize = function (str) {
             return str.replace(new RegExp('"', 'gi'), '&quot;');
         };
 
-        this.render = function (str, data) {
+        me.render = function (str, data) {
             $.each(data, function (key, value) {
                 str = str.replace(new RegExp("\\{" + key + "\\}", 'gi'), value);
             });
             return str;
         };
 
-        this.confirmDelete = function (element, e, rowData) {
+        me.confirmDelete = function (element, e, rowData) {
             e.preventDefault();
             var confirmUrl = me.render($(element).attr('href'), rowData);
             var msg = me.render($(element).attr('confirm'), rowData);
@@ -101,7 +103,7 @@
             });
         };
 
-        this.confirmRedirect = function (element, e, rowData) {
+        me.confirmRedirect = function (element, e, rowData) {
             e.preventDefault();
             var confirmUrl = me.render($(element).attr('href'), rowData);
             var msg = me.render($(element).attr('confirm'), rowData);
@@ -111,17 +113,58 @@
                     window.location.href = confirmUrl;
             });
         };
+        
+        me.getDataParams = function(data) {
+            data = {};
+        };
 
-        this.config = function (dataUrl, columns, lang) {
+        me.config = function (dataUrl, columns, lang) {
             return	{
                 processing: true,
                 serverSide: true,
-                ajax: dataUrl,
+                ajax:  { url: dataUrl, data: me.getDataParams },
                 aoColumns: columns,
                 language: {url: lang},
                 fnRowCallback: me.rowConfig
             };
         };
+
+        me.getDataTable = function () {
+            return me._datatable;
+        };
+
+        me.getDataTableAjax = function () {
+            return me.getDataTable().ajax;
+        };
+
+        me.setParams = function (params) {
+            $.each(params, me.setParam);
+            return me;
+        };
+
+        me.setParam = function (key, value) {
+            var ajax = me.getDataTableAjax();
+            var data = ajax.params();
+            //var data = parse.param();
+            data[key] = value;
+            ajax.params(data);
+            return me;
+        };
+
+        me.rmParam = function (key) {
+            var data = me.getDataTableAjax().params();
+            if (typeof data[key] !== 'undefined')
+                delete data[key];
+
+            me.getDataTableAjax().params(data);
+            return me;
+        };
+
+        me.refresh = function () {
+            me.getDataTableAjax().reload();
+            return me;
+        };
+
 
         this.init = function () {
             var jsonConf = $element.attr('app-config');
@@ -138,15 +181,14 @@
             var parent = $element;
             var $table = parent.find('table.data').first();
 
-            $table.DataTable(dataTableConf);
+            me._datatable = $table.DataTable(dataTableConf);
 
             me.buttonConfig(parent.find('.navbar-header'), config.buttons);
 
             $element.data('$.spell.DataTable', me);
         };
-        
-        me.init();
 
+        return this;
     };
 
 }(jQuery);

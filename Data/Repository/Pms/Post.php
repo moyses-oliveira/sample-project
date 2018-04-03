@@ -19,12 +19,12 @@ class Post extends AbstractRepository {
      */
     public function getAll(string $vrcAlias): array
     {
-        $qb = $this->_em->createQueryBuilder()
+        $qb = $this->getEm()->createQueryBuilder()
             ->select([
                 't.id',
                 't.fkUser',
                 'u.vrcName',
-                't.enmType',
+                't.chrType',
                 't.dttCreated',
                 't.vrcTitle',
                 't.txtNote'
@@ -45,7 +45,7 @@ class Post extends AbstractRepository {
      */
     public function options()
     {
-        $data = $this->_em->createQueryBuilder()
+        $data = $this->getEm()->createQueryBuilder()
             ->select(['t.id', 't.vrcName'])
             ->from('Data\Entity\Pms\Project', 't')
             ->where('t.dttDeleted IS NULL')
@@ -71,7 +71,7 @@ class Post extends AbstractRepository {
         if(!$id)
             $id = '0';
 
-        return $this->_em->createQueryBuilder()
+        return $this->getEm()->createQueryBuilder()
                 ->select(['COUNT(t) AS total'])
                 ->from('Data\Entity\Pms\Project', 't')
                 ->where('t.dttDeleted IS NULL AND t.id <> :id')
@@ -82,7 +82,7 @@ class Post extends AbstractRepository {
     public function getByAlias(string $vrcAlias): \Data\Entity\Pms\Project
     {
         $entityName = get_class(new \Data\Entity\Pms\Project);
-        $response = $this->_em->createQueryBuilder()
+        $response = $this->getEm()->createQueryBuilder()
                 ->select(['t.id'])->from($entityName, 't')
                 ->where('t.dttDeleted IS NULL AND t.vrcAlias = :vrcAlias')
                 ->setParameters(compact('vrcAlias'))->getQuery()->getOneOrNullResult();
@@ -90,7 +90,7 @@ class Post extends AbstractRepository {
             throw \Exception('Project alias can\'t be found!');
 
 
-        return $this->_em->find($entityName, $response['id']);
+        return $this->getEm()->find($entityName, $response['id']);
     }
 
 }

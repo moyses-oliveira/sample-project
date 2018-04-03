@@ -50,8 +50,8 @@ class App extends AbstractController {
     public function save(?string $pk = null)
     {
         $inspector = new \Data\Inspector\Acl\App();
-        $entity = (new \Data\Entity\Acl\App)->load($pk);
-        if(!$entity)
+        $entity = new \Data\Entity\Acl\App();
+        if(!!$pk && !$entity->load($pk))
             return $this->json403();
 
         $response = (new \Data\Service\Acl\App())->save($inspector, $entity, $_POST);

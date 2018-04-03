@@ -50,6 +50,23 @@ class InfoUser extends AbstractService {
         return true;
     }
 
+    public function checkRows(int $fkInfo)
+    {
+        /* @var $entity \Data\Entity\Cns\Info */
+        $entity = (new \Data\Entity\Cns\Info())->load($fkInfo);
+        $entity->setDttFinished(new \DateTime());
+        $entity->persist([]);
+        
+        $this->getEm()->createQueryBuilder()
+            ->update('Data\Entity\Cns\InfoUser', 't')
+            ->set('t.dttChecked', ':dttChecked')
+            ->where('t.fkInfo=:fkInfo')
+            ->setParameter('dttChecked', new \DateTime())
+            ->setParameter('fkInfo', $fkInfo)
+            ->getQuery()->execute();
+        return true;
+    }
+
     private function update($params)
     {
         $this->getEm()->createQueryBuilder()

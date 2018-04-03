@@ -21,7 +21,7 @@ class Project extends AbstractService {
      * @param array $input
      * @return array
      */
-    public function save(EntryCollectionInterface $inspector, \Data\Entity\Pms\Project $entity, array $input): array
+    public function save(\Data\Inspector\Pms\Project $inspector, \Data\Entity\Pms\Project $entity, array $input): array
     {
         $inspector->fromArray($input);
         $success = $inspector->validate();
@@ -42,7 +42,7 @@ class Project extends AbstractService {
         endif;
         
         if($success)
-            $entity->persist($inspector->normalize($input));
+            $entity->persist($inspector->normalize());
 
         $data = $entity->toArray();
         return compact('success', 'errors', 'data');

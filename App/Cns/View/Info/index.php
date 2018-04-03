@@ -24,8 +24,8 @@ $tbConfig->setSortDefault(0);
 $tbConfig->createColumn('dttPostedFormated', 'Data');
 $tbConfig->createColumn('vrcSummary', 'Resumo');
 $actions = [];
-$update = Route::link(Route::getModule(), 'update', '{id}');
-$actions[] = new ActionConfig($update, 'pencil', 'Visualizar', 'btn-primary');
+$update = Route::link(Route::getModule(), 'view', '{id}');
+$actions[] = new ActionConfig($update, 'plus', 'Visualizar', 'btn-primary');
 $tbConfig->createColumn('id', '&nbsp;', $actions, ['width'=>'110px']);
 
 echo (new TableRender($tbConfig, 'app-data-table'))->render();

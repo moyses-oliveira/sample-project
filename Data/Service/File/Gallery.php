@@ -2,7 +2,7 @@
 
 namespace Data\Service\File;
 
-use Eventviva\ImageResize;
+use Gumlet\ImageResize;
 use Spell\MVC\Flash\Route;
 use Spell\Flash\Path;
 
@@ -21,6 +21,12 @@ class Gallery {
 
     /**
      *
+     * @var array 
+     */
+    public $dir = [];
+
+    /**
+     *
      * @var array
      */
     private $sizeCollection = [];
@@ -29,34 +35,66 @@ class Gallery {
      * 
      * @param array $path
      */
-    public function __construct(array $path)
+    public function __construct(array $path = [])
+    {
+        $this->setDir([]);
+        $this->setPath(array_merge($this->getDir(), $path));
+    }
+
+    public function setDir(array $dir)
+    {
+        $this->dir = $dir;
+    }
+
+    public function getDir(): array
+    {
+        return $this->dir;
+    }
+
+    public function setPath(array $path)
     {
         $this->path = $path;
     }
 
+    public function getPath(): array
+    {
+        return $this->path;
+    }
+    
     public function upload(array $attach, ?int $width = null, ?int $height = null, $crop = false): string
     {
-        $dir = [Route::getPath()];
         $ext = pathinfo($attach['name'], PATHINFO_EXTENSION);
         $filename = md5(uniqid()) . ".$ext";
-        $src = array_merge($this->path, ['image', $filename]);
-        Path::make(array_merge($dir, $this->path, ['image']));
-        move_uploaded_file($attach['tmp_name'], Path::combine(array_merge($dir, $src)));
+        $src = array_merge($this->getPath(), ['image', $filename]);
+        Path::make(array_merge([Route::getPath()], $this->getPath(), ['image']));
+        move_uploaded_file($attach['tmp_name'], Route::getPath() . DIRECTORY_SEPARATOR . Path::combine($src));
+        return $this->process($src, $width, $height, $crop);
+    }
+    
+    public function fromSrc(string $src, ?int $width = null, ?int $height = null, $crop = false) {
+        $ext = pathinfo($src, PATHINFO_EXTENSION);
+        $filename = md5(uniqid()) . ".$ext";
+        $new = array_merge($this->getPath(), ['image', $filename]);
+        Path::make(array_merge([Route::getPath()], $this->getPath(), ['image']));
+        copy($src, Path::combine($new));
+        return $this->process($new, $width, $height, $crop);
+    }
+    
+    public function process(array $src, ?int $width = null, ?int $height = null, $crop = false) {
         $filepath = Path::combine($src, '/');
-        $this->resize($filepath, $width, $height, $crop);
-
+        $this->resize(Route::getPath()  . DIRECTORY_SEPARATOR . $filepath, $width, $height, $crop);
+       
         foreach($this->sizeCollection as $size):
             /* @var $size \Data\Service\File\Size */
-            $this->imageThumb($filepath, $size);
+            $this->imageThumb(Route::getPath()  . DIRECTORY_SEPARATOR . $filepath, $size);
         endforeach;
-
-        return Route::getRoot() . $filepath;
+        
+        return $filepath;
     }
 
     public function imageThumb($src, Size $size)
     {
-        $dir = [Route::getPath()];
-        $thumbPath = array_merge($dir, $this->path, [$size->getPath()]);
+        $thumbPath = array_merge($this->path, [$size->getPath()]);
         Path::make($thumbPath);
         $thumb = Path::combine($thumbPath) . DIRECTORY_SEPARATOR . basename($src);
         $image = new ImageResize($src);
@@ -101,4 +139,8 @@ class Gallery {
         $this->sizeCollection[] = new Size($path, $width, $height, $crop);
     }
 
+    
+    public function getSizeCollection(): array {
+        return $this->sizeCollection;
+    }
 }

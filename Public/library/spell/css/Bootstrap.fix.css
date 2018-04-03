@@ -35,7 +35,7 @@ fieldset.panel .panel-body { padding-top: 5px; }
     letter-spacing: 10px;
     font-size: 1.2em;
     width: 1.4em;  
-    color: #367FA9;
+    color: #000;
 }
 
 .radio-group .item input[type=radio]:checked ~ label:before,
@@ -48,13 +48,45 @@ fieldset.panel .panel-body { padding-top: 5px; }
     content: "\f096";
 }
 .radio-group .item input[type=radio]:checked ~ label:before {
-    content: "\f192";        
-    color: #367FA9;
+    content: "\f192"; 
 }
 .checkbox-group .item input[type=checkbox]:checked ~ label:before {
-    content: "\f046";        
+    content: "\f046";  
+}
+
+.checkbox-group.red .item input[type=checkbox]~ label:before {        
+    color: #ff5b5b;
+}
+
+.checkbox-group.yellow .item input[type=checkbox] ~ label:before {        
+    color: #F9C851;
+}
+
+.checkbox-group.green .item input[type=checkbox] ~ label:before {        
+    color: #10c469;
+}
+
+.checkbox-group.blue .item input[type=checkbox] ~ label:before {        
     color: #367FA9;
 }
 
-/*** END # custom checkboxes ***/
+.callout.callout-danger {
+    background-color: #dd4b39;
+    border-color: #c23321;
+    color: #fff;
+}
 
+.callout.callout-danger h4 {
+    color: #fff;
+}
+.callout {
+    border-radius: 3px;
+    margin: 0 0 20px 0;
+    padding: 15px 30px 15px 15px;
+    border-left: 5px solid #eee;
+}
+
+.max-1024 { max-width: 1024px !important; display: block; }
+.max-800 { max-width: 800px !important; display: block; }
+.max-600 { max-width: 600px !important; display: block; }
+.center { margin-left: auto !important; margin-right: auto !important; }

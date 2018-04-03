@@ -13,7 +13,7 @@ use Doctrine\ORM\QueryBuilder;
  */
 class Repository extends AbstractRepository {
 
-    private $connection = 'brain';
+    private $connection = 'default';
     
     public function tables($prefix) {
         $conn = $this->getEm($this->connection)->getConnection();

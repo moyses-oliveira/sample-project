@@ -2,9 +2,8 @@
     "config": { "vendor-dir": "vendor" },
     "require": {
         "moyses-oliveira/spell": "dev-master",
-        "eventviva/php-image-resize": "^1.6",
+        "gumlet/php-image-resize": "1.7.0",
         "rain/raintpl": "^3.1",
-        "braspag/braspagapiphpsdk": "^3.0",
         "google/apiclient": "^2.2",
         "auth0/auth0-php": "^5.0"
     },

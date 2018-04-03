@@ -11,6 +11,7 @@ class Info extends AbstractController {
     {
         $this->isAuth = false;
         $this->setTitle(Localization::T(__CLASS__ . '::TITLE'));
+        parent::__settings();
     }
 
     public function index()
@@ -22,7 +23,7 @@ class Info extends AbstractController {
     public function datatable()
     {
         /* @var $repository \Data\Repository\Cns\Info */
-        $repository = $this->getEm()->getRepository('\Data\Entity\Cns\Info');
+        $repository = $this->getEm()->getRepository(\Data\Entity\Cns\Info::class);
         return $this->json($repository->loadData($_GET));
     }
 
@@ -42,28 +43,55 @@ class Info extends AbstractController {
         return $this->form($entity->toArray());
     }
 
-    private function form($data = [])
+    public function view($pk)
     {
+        $this->setSubtitle('Visualizar');
+        $entity = (new \Data\Entity\Cns\Info)->load($pk);
+        if(!$entity)
+            return $this->error('Page can\'t be found!', 404);
+
+        return $this->form($entity->toArray(), 'view.php');
+    }
+
+    private function form($data = [], $file = 'form.php')
+    {
+        $theme = $this->getTheme();
+        $theme->addJs('application/cns/js/groupSelector.js');
         $action = $data ? Route::link(Route::getModule(), 'save', $data['id']) : Route::link(Route::getModule(), 'save');
-        $this->getView()->setFile('form.php');
+        $this->getView()->setFile($file);
 
-        /* @var $repository \Data\Repository\Cns\InfoUser */
-        $repository = $this->getEm()->getRepository('\Data\Entity\Cns\InfoUser');
-        $users = $repository->getOptions();
-        $usersEnabled = $repository->getValues($data['id'] ?? '');
-
+        $levelCollection =  $this->getEm()->getRepository(\Data\Entity\Cns\Level::class)->options();
+        
+        /* @var $userRepository \Data\Repository\Cns\InfoUser */
+        $userRepository = $this->getEm()->getRepository(\Data\Entity\Cns\InfoUser::class);
+        
+        
+        if($file === 'view.php'):
+            $users = $userRepository->getActives($data['id']);
+        else:
+            $users = $userRepository->getOptions();
+            $usersEnabled = $userRepository->getValues($data['id'] ?? '');
+        endif;
+        
+        /* @var $groupRepository \Data\Repository\Acl\UserGroup */
+        $groupRepository = $this->getEm()->getRepository(\Data\Entity\Acl\UserGroup::class);
+        $groups = $groupRepository->getOptions();
+        
+        $this->getTheme()->getHead()->getUIV()->add('groupRel', $groupRepository->getRel());
+        
         $saved = $this->getSessionMessage(__CLASS__ . '::saved');
-        return $this->render(compact('data', 'action', 'users', 'usersEnabled', 'saved'));
+        return $this->render(compact('data', 'action', 'users', 'groups', 'usersEnabled', 'saved', 'levelCollection'));
     }
 
     public function save(?string $pk = null)
     {
         $inspector = new \Data\Inspector\Cns\Info();
-        $entity = (new \Data\Entity\Cns\Info)->load($pk);
-        if(!$entity)
+        $entity = new \Data\Entity\Cns\Info();
+        if(!!$pk && !$entity->load($pk))
             return $this->json403();
 
-        $response = (new \Data\Service\Cns\Info())->save($inspector, $entity, $_POST, $_POST['users']);
+        $_POST['fkUser'] = $GLOBALS['user']['id'];
+        $response = (new \Data\Service\Cns\Info())->save($entity, $_POST, $_POST['users']);
         $response['redirect'] = Route::link(Route::getModule(), 'update', $response['data']['id']);
 
         if($response['success'])
@@ -76,12 +104,21 @@ class Info extends AbstractController {
     {
         global $user;
         /* @var $repository \Data\Repository\Cns\InfoUser */
-        $repository = $this->getEm()->getRepository('\Data\Entity\Cns\InfoUser');
+        $repository = $this->getEm()->getRepository(\Data\Entity\Cns\InfoUser::class);
         $response = $repository->getNewMessagesByUser($user['id']);
         
         return $this->json($response, 200);
     }
 
+    public function loadUrgentMessages() {
+        global $user;
+        /* @var $repository \Data\Repository\Cns\InfoUser */
+        $repository = $this->getEm()->getRepository(\Data\Entity\Cns\InfoUser::class);
+        $response = $repository->getNewUrgentMessagesByUser($user['id']);
+        
+        return $this->json($response, 200);
+    }
+    
     public function acceptMessage($id)
     {
         global $user;

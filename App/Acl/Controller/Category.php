@@ -34,8 +34,8 @@ class Category extends AbstractController {
     public function update($pk)
     {
         $this->setSubtitle(Localization::T('SUBTITLE_UPDATE'));
-        $entity = (new \Data\Entity\Acl\Category)->load($pk);
-        if(!$entity)
+        $entity = new \Data\Entity\Acl\Category();
+        if(!$entity->load($pk))
             return $this->error('Page can\'t be found!', 404);
 
         return $this->form($entity->toArray());
@@ -51,12 +51,11 @@ class Category extends AbstractController {
 
     public function save(?string $pk = null)
     {
-        $inspector = new \Data\Inspector\Acl\Category();
-        $entity = (new \Data\Entity\Acl\Category)->load($pk);
-        if(!$entity)
+        $entity = new \Data\Entity\Acl\Category();
+        if(!!$pk && !$entity->load($pk))
             return $this->json403();
 
-        $response = (new \Data\Service\Acl\Category())->save($inspector, $entity, $_POST);
+        $response = (new \Data\Service\Acl\Category())->save($entity, $_POST);
         $response['redirect'] = Route::link(Route::getModule(), 'update', $response['data']['id']);
 
         if($response['success'])

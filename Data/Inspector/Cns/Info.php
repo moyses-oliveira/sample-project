@@ -14,6 +14,10 @@ class Info extends EntryCollection {
 
     public function __construct()
     {
+        $this->set(new Entry('fkUser', 10))->isRequired();
+        
+        $this->set(new Entry('tnyLevel', 10))->isRequired();
+        
         $this->set(new Entry('vrcSummary', 128))->isRequired();
 
         $this->set(new Entry('vrcDescription', 2048))->isRequired();

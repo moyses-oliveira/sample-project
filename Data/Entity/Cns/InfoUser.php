@@ -22,22 +22,26 @@ class InfoUser extends AbstractEntity {
 	
     /**
      * @ORM\Column(name="fkUser", type="integer", length=10)
-     * @var integer     */
+     * @var integer 
+     */
     protected $fkUser;
 	
     /**
      * @ORM\Column(name="fkInfo", type="integer", length=10)
-     * @var integer     */
+     * @var integer 
+     */
     protected $fkInfo;
 	
     /**
      * @ORM\Column(name="dttChecked", type="datetime", length=20)
-     * @var datetime     */
+     * @var datetime 
+     */
     protected $dttChecked;
 	
     /**
      * @ORM\Column(name="dttDeleted", type="datetime", length=20)
-     * @var datetime     */
+     * @var datetime 
+     */
     protected $dttDeleted;
 	
     public function __construct($data=null)

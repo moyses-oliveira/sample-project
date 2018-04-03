@@ -11,7 +11,7 @@ $home = Route::getRoot() . Path::combine(['acl', 'auth', 'dashboard'], '/')
 
             <!-- LOGO -->
             <div class="topbar-left">
-                <a href="<?php echo $home;?>" class="logo"><span>Admin<span>to</span></span></a>
+                <a href="<?php echo $home;?>" class="logo"><span>Admin <span>Sample</span></span></a>
             </div>
             <!-- End Logo container-->
                         

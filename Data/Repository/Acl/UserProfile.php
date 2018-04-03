@@ -17,7 +17,7 @@ class UserProfile extends AbstractRepository {
      */
     public function getOptions(): array
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['t.id', 't.vrcName'])
             ->from('Data\Entity\Acl\Profile', 't')
             ->where('t.dttDeleted IS NULL')
@@ -38,7 +38,7 @@ class UserProfile extends AbstractRepository {
      */
     public function getValues(string $fkUser): array
     {
-        $qb = $this->_em->createQueryBuilder();
+        $qb = $this->getEm()->createQueryBuilder();
         $qb->select(['p.id'])
             ->from('Data\Entity\Acl\UserProfile', 't')
             ->join('Data\Entity\Acl\Profile', 'p', Join::WITH, 'p.id=t.fkProfile AND p.dttDeleted IS NULL')
@@ -52,6 +52,23 @@ class UserProfile extends AbstractRepository {
             $actives[] = $data['id'];
 
         return $actives;
+    }
+    
+    
+    public function getUserCollectionByProfileAlias($vrcAlias) {
+        $qb = $this->getEm()->createQueryBuilder();
+        $qb->select(['t.fkUser AS id'])
+            ->from('Data\Entity\Acl\UserProfile', 't')
+            ->join('Data\Entity\Acl\Profile', 'p', Join::WITH, 'p.id=t.fkProfile AND p.dttDeleted IS NULL AND p.vrcAlias=:vrcAlias')
+            ->where('t.dttDeleted IS NULL')
+            ->setParameters(compact('vrcAlias'));
+        $results = $qb->getQuery()->getResult();
+        $userCollection = [];
+        foreach($results as $data)
+            $userCollection[] = $data['id'];
+
+        return $userCollection;
+        
     }
 
 }

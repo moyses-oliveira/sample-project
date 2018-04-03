@@ -5,7 +5,7 @@
         $.spell = {};
 
     $(document).ready(function () {
-        $('form[data-spell_validator]').each(function(){
+        $('form[data-spell_validator]').each(function () {
             $.spell.Validator(this);
         });
     });
@@ -16,7 +16,7 @@
         $element.data('$.spell.Validator', me);
 
         me.fields = function () {
-            return $element.find(':input:not([type="submit"], [type="reset"], button)');
+            return $element.find(':input:not([type="submit"], [type="reset"], button)').not('[ignore-validation]');
         };
 
         /**
@@ -138,16 +138,23 @@
             $.each(errors, function (k, error) {
                 var $gem = $element.find('.global-form-warnings');
                 var $field = $element.find('[name="' + k + '"]');
-                
+
+                var $global = $element.find('.global-form-warnings')
                 if (k === 'GLOBAL') {
-                    $element.find('.global-form-warnings')
-                            .removeClass('hide').find('p').html(error);
+                    $global.removeClass('hide').find('p').html(error);
+                    $('html, body').animate({ scrollTop: $global.offset().top - 150 }, 200);
                 }
                 me.fieldShowError($field, $.spell.ValidatorMessage(error));
             });
         };
 
+        me.onSuccess = function (data) {
+            if (typeof data.redirect !== 'undefined')
+                window.location.href = data.redirect;
+        };
+
         me.send = function () {
+            $('body').faLoading();
             $.ajax({
                 type: 'POST',
                 dataType: 'json',
@@ -158,12 +165,13 @@
                     if (!data.success)
                         return me.showErrors(data.errors);
 
-                    if (typeof data.redirect !== 'undefined')
-                        window.location.href = data.redirect;
-
+                    me.onSuccess(data);
                 },
                 error: function (x, s, e) {
                     console.log(e, x, s);
+                },
+                complete: function(jqXHR, textStatus) {
+                    $('body').faLoading();
                 }
             });
         };
@@ -177,10 +185,13 @@
             var nonText = ['radio', 'checkbox', 'file', 'button', 'submit', 'reset', 'hidden'];
             var isTextInput = isInput && (nonText).indexOf($field.attr('type')) < 0;
 
-            if (isTextInput || isTextarea)
+            if (isTextInput || isTextarea) {
                 $field.keyup(me.fieldCheckTrigger);
-            else
                 $field.change(me.fieldCheckTrigger);
+                $field.bind('input', me.fieldCheckTrigger);
+            } else {
+                $field.change(me.fieldCheckTrigger);
+            }
 
             $field.blur(me.fieldCheckTrigger);
         };
